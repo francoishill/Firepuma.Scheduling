@@ -17,7 +17,7 @@ public class EmptyTimerTrigger
     }
 
     [FunctionName("EmptyTimerTrigger")]
-    public async Task RunAsync([TimerTrigger("0 * * * * *")] TimerInfo myTimer, ILogger log)
+    public async Task RunAsync([TimerTrigger("0 */5 * * * *")] TimerInfo myTimer, ILogger log)
     {
         log.LogInformation("C# Timer trigger function executed at: {Time}", DateTime.UtcNow);
     }
