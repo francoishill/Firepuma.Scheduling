@@ -1,0 +1,29 @@
+﻿name: Unit Tests only
+
+on:
+  push:
+    branches-ignore:
+      - main
+
+env:
+  DOTNET_VERSION: '6.0'
+
+jobs:
+  unit-tests:
+    runs-on: windows-latest
+    steps:
+      - name: 'Checkout GitHub Action'
+        uses: actions/checkout@v2
+
+      - name: Setup DotNet ${{ env.DOTNET_VERSION }} Environment
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          dotnet restore Firepuma.Scheduling.FunctionApp
+          dotnet restore Firepuma.Scheduling.Tests
+
+      - name: Test
+        run: dotnet test --no-restore

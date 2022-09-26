@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Firepuma.Scheduling.FunctionApp", "Firepuma.Scheduling.FunctionApp\Firepuma.Scheduling.FunctionApp.csproj", "{A4703622-AB38-4CEA-8BDD-CBA46E130AB8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OtherFiles", "OtherFiles", "{4F0F795E-0B2B-40BC-AE4A-11BDB67AC1FA}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{2530697F-9BF3-431A-84E8-AAF00244E357}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{68B065F5-7697-41B0-831A-7F4F9F3F0656}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\deploy-function-app.yml = .github\workflows\deploy-function-app.yml
+		.github\workflows\unit-tests-only.yml = .github\workflows\unit-tests-only.yml
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Firepuma.Scheduling.Tests", "Firepuma.Scheduling.Tests\Firepuma.Scheduling.Tests.csproj", "{802F5A26-CC2F-45CE-B09B-0B0134FD81E9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A4703622-AB38-4CEA-8BDD-CBA46E130AB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4703622-AB38-4CEA-8BDD-CBA46E130AB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4703622-AB38-4CEA-8BDD-CBA46E130AB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4703622-AB38-4CEA-8BDD-CBA46E130AB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{802F5A26-CC2F-45CE-B09B-0B0134FD81E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{802F5A26-CC2F-45CE-B09B-0B0134FD81E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{802F5A26-CC2F-45CE-B09B-0B0134FD81E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{802F5A26-CC2F-45CE-B09B-0B0134FD81E9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2530697F-9BF3-431A-84E8-AAF00244E357} = {4F0F795E-0B2B-40BC-AE4A-11BDB67AC1FA}
+		{68B065F5-7697-41B0-831A-7F4F9F3F0656} = {2530697F-9BF3-431A-84E8-AAF00244E357}
+	EndGlobalSection
+EndGlobal
