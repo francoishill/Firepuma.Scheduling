@@ -67,9 +67,6 @@ public abstract class SpecificationEvaluatorBase<T> : ISpecificationEvaluator<T>
             query = query.Take(specification.Take.Value);
         }
 
-
-        //Include expressions will be evaluated within the EF implementation package.
-
         return query;
     }
 }
