@@ -26,14 +26,17 @@ public class Startup : FunctionsStartup
         var config = builder.GetContext().Configuration;
         var services = builder.Services;
 
-        services.GetValidatedConfig<Dictionary<string, ClientApplicationConfig>>(config.GetSection("FirepumaScheduling:ClientApps"));
+        services
+            .AddOptions<ClientApplicationConfigs>()
+            .Bind(config.GetSection("FirepumaScheduling:ClientApps"))
+            .ValidateDataAnnotations();
 
         var serviceBusConnectionString = config.GetValue<string>("FirepumaScheduling:ServiceBus");
         services.AddSingleton<ServiceBusClient>(_ => new ServiceBusClient(serviceBusConnectionString));
 
         services.AddSingleton<ServiceBusSenderProvider>(s =>
         {
-            var clientAppConfigs = s.GetRequiredService<IOptions<Dictionary<string, ClientApplicationConfig>>>().Value.Values;
+            var clientAppConfigs = s.GetRequiredService<IOptions<ClientApplicationConfigs>>().Value.Values;
 
             var logger = s.GetRequiredService<ILogger<ServiceBusSenderProvider>>();
 
