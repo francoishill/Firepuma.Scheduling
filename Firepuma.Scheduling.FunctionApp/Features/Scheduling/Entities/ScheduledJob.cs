@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using Cronos;
+using Firepuma.DatabaseRepositories.Abstractions.Entities;
 using Firepuma.Scheduling.FunctionApp.Abstractions.ClientApplications.ValueObjects;
-using Firepuma.Scheduling.FunctionApp.Abstractions.Entities;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 

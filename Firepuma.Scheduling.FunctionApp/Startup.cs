@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Azure.Messaging.ServiceBus;
+using Firepuma.DatabaseRepositories.CosmosDb;
 using Firepuma.Scheduling.FunctionApp;
 using Firepuma.Scheduling.FunctionApp.Abstractions.ClientApplications.ValueObjects;
 using Firepuma.Scheduling.FunctionApp.Config;
 using Firepuma.Scheduling.FunctionApp.Features.Scheduling;
-using Firepuma.Scheduling.FunctionApp.Infrastructure.CosmosDb;
 using Firepuma.Scheduling.FunctionApp.Infrastructure.MessageBus;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
@@ -47,7 +47,11 @@ public class Startup : FunctionsStartup
 
         var cosmosConnectionString = config.GetValue<string>("FirepumaScheduling:CosmosConnectionString");
         var cosmosDatabaseId = config.GetValue<string>("FirepumaScheduling:CosmosDatabaseId");
-        services.AddCosmosDb(cosmosConnectionString, cosmosDatabaseId);
+        services.AddCosmosDbRepositories(options =>
+        {
+            options.ConnectionString = cosmosConnectionString;
+            options.DatabaseId = cosmosDatabaseId;
+        });
 
         services.AddSchedulingFeature();
     }

@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
-using Firepuma.Scheduling.FunctionApp.Infrastructure.CosmosDb;
+using Firepuma.DatabaseRepositories.CosmosDb.Services;
+using Firepuma.Scheduling.FunctionApp.Config;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
@@ -16,12 +14,11 @@ namespace Firepuma.Scheduling.FunctionApp.Api.AdminHttpTriggers;
 
 public class EnsureCosmosContainersExist
 {
-    private readonly Database _cosmosDb;
+    private readonly ICosmosDbAdminService _cosmosDbAdminService;
 
-    public EnsureCosmosContainersExist(
-        Database cosmosDb)
+    public EnsureCosmosContainersExist(ICosmosDbAdminService cosmosDbAdminService)
     {
-        _cosmosDb = cosmosDb;
+        _cosmosDbAdminService = cosmosDbAdminService;
     }
 
     [FunctionName("EnsureCosmosContainersExist")]
@@ -34,57 +31,11 @@ public class EnsureCosmosContainersExist
 
         var containersToCreate = new[]
         {
-            CosmosContainers.ScheduledJobs,
+            CosmosContainersConfig.ScheduledJobs,
         };
 
-        var successfulContainers = new List<object>();
-        var failedContainers = new List<object>();
-        foreach (var containerConfig in containersToCreate)
-        {
-            log.LogDebug(
-                "Creating container {Container} with PartitionKeyPath {PartitionKeyPath}",
-                containerConfig.ContainerName, containerConfig.PartitionKeyPath);
+        var result = await _cosmosDbAdminService.CreateContainersIfNotExist(containersToCreate, cancellationToken);
 
-            try
-            {
-                await _cosmosDb.CreateContainerIfNotExistsAsync(
-                    new ContainerProperties(containerConfig.ContainerName, containerConfig.PartitionKeyPath),
-                    cancellationToken: cancellationToken);
-
-                log.LogInformation(
-                    "Successfully created container {Container} with PartitionKeyPath {PartitionKeyPath}",
-                    containerConfig.ContainerName, containerConfig.PartitionKeyPath);
-
-                successfulContainers.Add(new
-                {
-                    Container = containerConfig,
-                });
-            }
-            catch (Exception exception)
-            {
-                log.LogError(
-                    exception,
-                    "Failed to create container {Container} with PartitionKeyPath {PartitionKeyPath}, error: {Error}, stack: {Stack}",
-                    containerConfig.ContainerName, containerConfig.PartitionKeyPath,
-                    exception.Message, exception.StackTrace);
-
-                failedContainers.Add(new
-                {
-                    Container = containerConfig,
-                    Exception = exception,
-                });
-            }
-        }
-
-        var responseDto = new
-        {
-            failedCount = failedContainers.Count,
-            successfulCount = successfulContainers.Count,
-
-            failedContainers,
-            successfulContainers,
-        };
-
-        return new OkObjectResult(responseDto);
+        return new OkObjectResult(result);
     }
 }

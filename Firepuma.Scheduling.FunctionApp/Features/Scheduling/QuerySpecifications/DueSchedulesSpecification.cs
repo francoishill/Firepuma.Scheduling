@@ -1,10 +1,10 @@
 ﻿using System;
-using Firepuma.Scheduling.FunctionApp.Abstractions.Specifications;
+using Firepuma.DatabaseRepositories.Abstractions.QuerySpecifications;
 using Firepuma.Scheduling.FunctionApp.Features.Scheduling.Entities;
 
-namespace Firepuma.Scheduling.FunctionApp.Features.Scheduling.Specifications;
+namespace Firepuma.Scheduling.FunctionApp.Features.Scheduling.QuerySpecifications;
 
-public class DueSchedulesSpecification : Specification<ScheduledJob>
+public class DueSchedulesSpecification : QuerySpecification<ScheduledJob>
 {
     public DueSchedulesSpecification(DateTime utcNow)
     {

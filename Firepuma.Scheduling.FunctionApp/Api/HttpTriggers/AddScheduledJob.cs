@@ -38,6 +38,11 @@ public class AddScheduledJob
         var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
         var requestDto = JsonConvert.DeserializeObject<AddScheduledJobRequest>(requestBody);
 
+        if (requestDto == null)
+        {
+            return HttpResponseFactory.CreateBadRequestResponse("Request deserialized as NULL");
+        }
+
         if (!requestDto.Validate(out var validationResultsForRequest))
         {
             return HttpResponseFactory.CreateBadRequestResponse("Request is invalid", validationResultsForRequest.Select(s => s.ErrorMessage).ToArray());

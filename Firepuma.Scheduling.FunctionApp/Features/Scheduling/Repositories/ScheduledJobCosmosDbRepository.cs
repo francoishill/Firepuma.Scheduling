@@ -1,6 +1,6 @@
 using System;
+using Firepuma.DatabaseRepositories.CosmosDb.Repositories;
 using Firepuma.Scheduling.FunctionApp.Features.Scheduling.Entities;
-using Firepuma.Scheduling.FunctionApp.Infrastructure.CosmosDb;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Logging;
 

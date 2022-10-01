@@ -1,6 +1,7 @@
-﻿using Firepuma.Scheduling.FunctionApp.Features.Scheduling.Entities;
+﻿using Firepuma.DatabaseRepositories.CosmosDb;
+using Firepuma.Scheduling.FunctionApp.Config;
+using Firepuma.Scheduling.FunctionApp.Features.Scheduling.Entities;
 using Firepuma.Scheduling.FunctionApp.Features.Scheduling.Repositories;
-using Firepuma.Scheduling.FunctionApp.Infrastructure.CosmosDb;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Firepuma.Scheduling.FunctionApp.Features.Scheduling;
@@ -13,7 +14,7 @@ public static class ServiceCollectionExtensions
             ScheduledJob,
             IScheduledJobRepository,
             ScheduledJobCosmosDbRepository>(
-            CosmosContainers.ScheduledJobs.ContainerName,
+            CosmosContainersConfig.ScheduledJobs.Id,
             (logger, container) => new ScheduledJobCosmosDbRepository(logger, container));
     }
 }
