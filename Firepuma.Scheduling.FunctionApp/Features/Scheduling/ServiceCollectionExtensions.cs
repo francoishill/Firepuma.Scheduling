@@ -15,6 +15,6 @@ public static class ServiceCollectionExtensions
             IScheduledJobRepository,
             ScheduledJobCosmosDbRepository>(
             CosmosContainersConfig.ScheduledJobs.Id,
-            (logger, container) => new ScheduledJobCosmosDbRepository(logger, container));
+            (logger, container, _) => new ScheduledJobCosmosDbRepository(logger, container));
     }
 }

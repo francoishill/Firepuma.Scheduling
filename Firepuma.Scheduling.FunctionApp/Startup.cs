@@ -48,10 +48,11 @@ public class Startup : FunctionsStartup
         var cosmosConnectionString = config.GetValue<string>("FirepumaScheduling:CosmosConnectionString");
         var cosmosDatabaseId = config.GetValue<string>("FirepumaScheduling:CosmosDatabaseId");
         services.AddCosmosDbRepositories(options =>
-        {
-            options.ConnectionString = cosmosConnectionString;
-            options.DatabaseId = cosmosDatabaseId;
-        });
+            {
+                options.ConnectionString = cosmosConnectionString;
+                options.DatabaseId = cosmosDatabaseId;
+            },
+            validateOnStart: false);
 
         services.AddSchedulingFeature();
     }
