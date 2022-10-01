@@ -1,12 +1,15 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Azure.Messaging.ServiceBus;
+using Firepuma.CommandsAndQueries.CosmosDb;
 using Firepuma.DatabaseRepositories.CosmosDb;
 using Firepuma.Scheduling.FunctionApp;
 using Firepuma.Scheduling.FunctionApp.Abstractions.ClientApplications.ValueObjects;
 using Firepuma.Scheduling.FunctionApp.Config;
 using Firepuma.Scheduling.FunctionApp.Features.Scheduling;
+using Firepuma.Scheduling.FunctionApp.Features.Scheduling.Commands;
 using Firepuma.Scheduling.FunctionApp.Infrastructure.MessageBus;
+using Firepuma.Scheduling.FunctionApp.Infrastructure.Services;
+using MediatR;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -56,6 +59,12 @@ public class Startup : FunctionsStartup
                 options.DatabaseId = cosmosDatabaseId;
             },
             validateOnStart: false);
+
+        services
+            .AddCommandsAuditWithCosmosDbPipelineBehavior<
+                CommandAuditPartitionKeyGenerator>(
+                CosmosContainersConfig.CommandExecutions.Id);
+        services.AddMediatR(typeof(NotifyClientOfDueJobCommand));
 
         services.AddSchedulingFeature();
     }

@@ -11,7 +11,7 @@ public class SchedulingJobDueBusMessage : ISchedulingBusMessage
     public ClientApplicationId ApplicationId { get; init; }
 
     public DateTime CurrentTriggerTime { get; init; }
-    public DateTime NextTriggerTime { get; init; }
+    public DateTime? NextTriggerTime { get; init; }
     public bool IsRecurring { get; init; }
 
     public JobRecurringSettings RecurringSettings { get; set; }

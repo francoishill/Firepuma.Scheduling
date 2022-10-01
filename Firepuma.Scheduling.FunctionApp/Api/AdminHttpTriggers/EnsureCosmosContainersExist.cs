@@ -31,6 +31,7 @@ public class EnsureCosmosContainersExist
 
         var containersToCreate = new[]
         {
+            CosmosContainersConfig.CommandExecutions,
             CosmosContainersConfig.ScheduledJobs,
         };
 

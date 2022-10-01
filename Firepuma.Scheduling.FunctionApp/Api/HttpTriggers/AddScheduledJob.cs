@@ -3,11 +3,11 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Firepuma.Scheduling.FunctionApp.Abstractions.ClientApplications.ValueObjects;
 using Firepuma.Scheduling.FunctionApp.Api.HttpTriggers.Requests;
+using Firepuma.Scheduling.FunctionApp.Features.Scheduling.Commands;
 using Firepuma.Scheduling.FunctionApp.Features.Scheduling.Entities;
-using Firepuma.Scheduling.FunctionApp.Features.Scheduling.Repositories;
 using Firepuma.Scheduling.FunctionApp.Infrastructure.HttpResponses;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
@@ -19,12 +19,12 @@ namespace Firepuma.Scheduling.FunctionApp.Api.HttpTriggers;
 
 public class AddScheduledJob
 {
-    private readonly IScheduledJobRepository _scheduledJobRepository;
+    private readonly IMediator _mediator;
 
     public AddScheduledJob(
-        IScheduledJobRepository scheduledJobRepository)
+        IMediator mediator)
     {
-        _scheduledJobRepository = scheduledJobRepository;
+        _mediator = mediator;
     }
 
     [FunctionName("AddScheduledJob")]
@@ -33,7 +33,8 @@ public class AddScheduledJob
         ILogger log,
         CancellationToken cancellationToken)
     {
-        log.LogInformation("C# HTTP trigger function processed a request");
+        var correlationId = req.HttpContext?.TraceIdentifier;
+        log.LogInformation("C# HTTP trigger function processed a request, correlationId {CorrelationId}", correlationId);
 
         var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
         var requestDto = JsonConvert.DeserializeObject<AddScheduledJobRequest>(requestBody);
@@ -48,33 +49,24 @@ public class AddScheduledJob
             return HttpResponseFactory.CreateBadRequestResponse("Request is invalid", validationResultsForRequest.Select(s => s.ErrorMessage).ToArray());
         }
 
-        var scheduledJob = new ScheduledJob
+        var addCommand = new AddScheduledJobCommand.Payload
         {
-            ApplicationId = new ClientApplicationId(requestDto.ApplicationId),
-
-            IsEnabled = true,
-
+            CorrelationId = correlationId,
+            ApplicationId = requestDto.ApplicationId,
+            StartTime = requestDto.StartTime ?? DateTime.UtcNow,
             IsRecurring = requestDto.IsRecurring ?? throw new ArgumentNullException($"{nameof(requestDto.IsRecurring)} cannot be null"),
-
+            RecurringSettings = requestDto.IsRecurring == true
+                ? new ScheduledJob.JobRecurringSettings
+                {
+                    UtcOffsetInMinutes = requestDto.RecurringUtcOffsetInMinutes ?? throw new ArgumentNullException($"{nameof(requestDto.RecurringUtcOffsetInMinutes)} cannot be null"),
+                    CronExpression = requestDto.RecurringCronExpression,
+                }
+                : null,
             ExtraValues = requestDto.ExtraValues,
         };
 
-        if (scheduledJob.IsRecurring)
-        {
-            scheduledJob.RecurringSettings = new ScheduledJob.JobRecurringSettings
-            {
-                UtcOffsetInMinutes = requestDto.RecurringUtcOffsetInMinutes ?? throw new ArgumentNullException($"{nameof(requestDto.RecurringUtcOffsetInMinutes)} cannot be null"),
-                CronExpression = requestDto.RecurringCronExpression,
-            };
-        }
+        var addResult = await _mediator.Send(addCommand, cancellationToken);
 
-        scheduledJob.NextTriggerTime = ScheduledJob.CalculateNextTriggerTime(log, scheduledJob, requestDto.StartTime ?? DateTime.UtcNow);
-
-        await _scheduledJobRepository.AddItemAsync(scheduledJob, cancellationToken);
-
-        return new OkObjectResult(new
-        {
-            ScheduledJobId = scheduledJob.Id,
-        });
+        return new OkObjectResult(addResult);
     }
 }
