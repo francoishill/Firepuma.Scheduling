@@ -25,7 +25,7 @@ public class ScheduleDueJobsTimerTrigger
 
     [FunctionName("ScheduleDueJobsTimerTrigger")]
     public async Task RunAsync(
-        [TimerTrigger("0 */5 * * * *")] TimerInfo myTimer,
+        [TimerTrigger("0 * * * * *")] TimerInfo myTimer,
         ILogger log,
         CancellationToken cancellationToken)
     {
