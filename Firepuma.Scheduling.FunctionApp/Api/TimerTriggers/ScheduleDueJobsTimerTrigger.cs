@@ -7,6 +7,7 @@ using Firepuma.Scheduling.FunctionApp.Features.Scheduling.Repositories;
 using MediatR;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace Firepuma.Scheduling.FunctionApp.Api.TimerTriggers;
 
@@ -29,7 +30,9 @@ public class ScheduleDueJobsTimerTrigger
         ILogger log,
         CancellationToken cancellationToken)
     {
-        log.LogInformation("C# Timer trigger function executed at: {Time}", DateTime.UtcNow);
+        log.LogInformation(
+            "C# Timer trigger function execution start at: {Time}, IsPastDue: {IsPastDue}, ScheduleStatus: {ScheduleStatus}",
+            DateTime.UtcNow.ToString("O"), myTimer.IsPastDue, JsonConvert.SerializeObject(myTimer.ScheduleStatus));
 
         var checkAheadDuration = TimeSpan.FromSeconds(55);
         var nowWithAddedBufferForProcessingTime = DateTime.UtcNow.Add(checkAheadDuration);
