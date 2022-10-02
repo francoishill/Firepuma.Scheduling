@@ -31,7 +31,8 @@ public class ScheduleDueJobsTimerTrigger
     {
         log.LogInformation("C# Timer trigger function executed at: {Time}", DateTime.UtcNow);
 
-        var nowWithAddedBufferForProcessingTime = DateTime.UtcNow.Add(TimeSpan.FromSeconds(30));
+        var checkAheadDuration = TimeSpan.FromSeconds(55);
+        var nowWithAddedBufferForProcessingTime = DateTime.UtcNow.Add(checkAheadDuration);
         var querySpecification = new DueSchedulesSpecification(nowWithAddedBufferForProcessingTime);
 
         var scheduledJobs = await _scheduledJobRepository.GetItemsAsync(querySpecification, cancellationToken);
