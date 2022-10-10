@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using Firepuma.Scheduling.FunctionApp.Abstractions.Validation;
+using Firepuma.Scheduling.Domain.Infrastructure.Validation;
 using Newtonsoft.Json.Linq;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global

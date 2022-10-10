@@ -22,7 +22,9 @@ jobs:
 
       - name: Install dependencies
         run: |
+          dotnet restore Firepuma.Scheduling.Domain
           dotnet restore Firepuma.Scheduling.FunctionApp
+          dotnet restore Firepuma.Scheduling.Infrastructure
           dotnet restore Firepuma.Scheduling.Tests
 
       - name: Test

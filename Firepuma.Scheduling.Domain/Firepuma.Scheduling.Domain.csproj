@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Firepuma.CommandsAndQueries.Abstractions" Version="0.6.9" />
+      <PackageReference Include="Firepuma.DatabaseRepositories.Abstractions" Version="0.6.7" />
+    </ItemGroup>
+
+</Project>

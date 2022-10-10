@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Firepuma.Scheduling.FunctionApp.Features.Scheduling.Commands;
-using Firepuma.Scheduling.FunctionApp.Features.Scheduling.QuerySpecifications;
-using Firepuma.Scheduling.FunctionApp.Features.Scheduling.Repositories;
+using Firepuma.Scheduling.Domain.Features.Scheduling.Commands;
+using Firepuma.Scheduling.Domain.Features.Scheduling.QuerySpecifications;
+using Firepuma.Scheduling.Domain.Features.Scheduling.Repositories;
 using MediatR;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;

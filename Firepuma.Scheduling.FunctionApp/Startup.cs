@@ -1,19 +1,15 @@
-﻿using System.Linq;
-using Azure.Messaging.ServiceBus;
-using Firepuma.CommandsAndQueries.CosmosDb;
-using Firepuma.DatabaseRepositories.CosmosDb;
+﻿using Azure.Messaging.ServiceBus;
+using Firepuma.Scheduling.Domain.Features.Scheduling.Commands;
+using Firepuma.Scheduling.Domain.Features.Scheduling.ValueObjects;
 using Firepuma.Scheduling.FunctionApp;
-using Firepuma.Scheduling.FunctionApp.Abstractions.ClientApplications.ValueObjects;
-using Firepuma.Scheduling.FunctionApp.Config;
-using Firepuma.Scheduling.FunctionApp.Features.Scheduling;
-using Firepuma.Scheduling.FunctionApp.Features.Scheduling.Commands;
-using Firepuma.Scheduling.FunctionApp.Infrastructure.MessageBus;
-using Firepuma.Scheduling.FunctionApp.Infrastructure.Services;
-using MediatR;
+using Firepuma.Scheduling.FunctionApp.Configuration;
+using Firepuma.Scheduling.Infrastructure.Features.Scheduling;
+using Firepuma.Scheduling.Infrastructure.Infrastructure.CommandHandling;
+using Firepuma.Scheduling.Infrastructure.Infrastructure.CosmosDb;
+using Firepuma.Scheduling.Infrastructure.Infrastructure.MessageBus;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 // ReSharper disable RedundantTypeArgumentsOfMethod
@@ -37,35 +33,27 @@ public class Startup : FunctionsStartup
         var serviceBusConnectionString = config.GetValue<string>("FirepumaScheduling:ServiceBus");
         services.AddSingleton<ServiceBusClient>(_ => new ServiceBusClient(serviceBusConnectionString));
 
-        services.AddSingleton<ServiceBusSenderProvider>(s =>
-        {
-            var clientAppConfigs = s.GetRequiredService<IOptions<ClientApplicationConfigs>>().Value.Values;
-
-            var logger = s.GetRequiredService<ILogger<ServiceBusSenderProvider>>();
-
-            var client = s.GetRequiredService<ServiceBusClient>();
-            var sendersMap = clientAppConfigs.ToDictionary(
-                x => new ClientApplicationId(x.ApplicationId),
-                x => client.CreateSender(x.QueueName));
-
-            return new ServiceBusSenderProvider(logger, sendersMap);
-        });
+        services.AddClientAppBusMessageSenders(s => s.GetRequiredService<IOptions<ClientApplicationConfigs>>().Value);
 
         var cosmosConnectionString = config.GetValue<string>("FirepumaScheduling:CosmosConnectionString");
         var cosmosDatabaseId = config.GetValue<string>("FirepumaScheduling:CosmosDatabaseId");
-        services.AddCosmosDbRepositories(options =>
-            {
-                options.ConnectionString = cosmosConnectionString;
-                options.DatabaseId = cosmosDatabaseId;
-            },
-            validateOnStart: false);
+        services.AddCosmosDbRepositoriesForFunction(cosmosConnectionString, cosmosDatabaseId);
 
-        services
-            .AddCommandsAuditWithCosmosDbPipelineBehavior<
-                CommandAuditPartitionKeyGenerator>(
-                CosmosContainersConfig.CommandExecutions.Id);
-        services.AddMediatR(typeof(NotifyClientOfDueJobCommand));
+        var authorizationFailuresContainerId = CosmosContainerConfiguration.AuthorizationFailures.ContainerProperties.Id;
+        var commandExecutionsContainerId = CosmosContainerConfiguration.CommandExecutions.ContainerProperties.Id;
+        var assembliesWithCommandHandlers = new[]
+        {
+            typeof(Startup).Assembly,
+            typeof(NotifyClientOfDueJobCommand).Assembly,
+            typeof(Firepuma.Scheduling.Infrastructure.Infrastructure.CosmosDb.ServiceCollectionExtensions).Assembly,
+        };
+        services.AddCommandsAndQueriesFunctionalityForFunction(
+            authorizationFailuresContainerId,
+            commandExecutionsContainerId,
+            assembliesWithCommandHandlers);
 
-        services.AddSchedulingFeature();
+        var scheduledJobsContainerId = CosmosContainerConfiguration.ScheduledJobs.ContainerProperties.Id;
+        services.AddSchedulingFeature(
+            scheduledJobsContainerId);
     }
 }

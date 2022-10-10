@@ -19,6 +19,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Firepuma.Scheduling.Tests", "Firepuma.Scheduling.Tests\Firepuma.Scheduling.Tests.csproj", "{802F5A26-CC2F-45CE-B09B-0B0134FD81E9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Firepuma.Scheduling.Infrastructure", "Firepuma.Scheduling.Infrastructure\Firepuma.Scheduling.Infrastructure.csproj", "{11B309D9-878D-4BB5-A9E8-1B2BEE248CB1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Firepuma.Scheduling.Domain", "Firepuma.Scheduling.Domain\Firepuma.Scheduling.Domain.csproj", "{719F3146-8953-4A4B-8DBE-2D353AC7B549}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{802F5A26-CC2F-45CE-B09B-0B0134FD81E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{802F5A26-CC2F-45CE-B09B-0B0134FD81E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{802F5A26-CC2F-45CE-B09B-0B0134FD81E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11B309D9-878D-4BB5-A9E8-1B2BEE248CB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11B309D9-878D-4BB5-A9E8-1B2BEE248CB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11B309D9-878D-4BB5-A9E8-1B2BEE248CB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11B309D9-878D-4BB5-A9E8-1B2BEE248CB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{719F3146-8953-4A4B-8DBE-2D353AC7B549}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{719F3146-8953-4A4B-8DBE-2D353AC7B549}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{719F3146-8953-4A4B-8DBE-2D353AC7B549}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{719F3146-8953-4A4B-8DBE-2D353AC7B549}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{2530697F-9BF3-431A-84E8-AAF00244E357} = {4F0F795E-0B2B-40BC-AE4A-11BDB67AC1FA}

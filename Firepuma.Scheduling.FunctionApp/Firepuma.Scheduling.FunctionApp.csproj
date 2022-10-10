@@ -4,13 +4,8 @@
         <AzureFunctionsVersion>V4</AzureFunctionsVersion>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="Cronos" Version="0.7.1" />
-        <PackageReference Include="Firepuma.CommandsAndQueries.CosmosDb" Version="0.1.1" />
-        <PackageReference Include="Firepuma.DatabaseRepositories.CosmosDb" Version="0.5.6" />
         <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
-        <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.30.1" />
         <PackageReference Include="Microsoft.Azure.Functions.Extensions" Version="1.1.0" />
-        <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.ServiceBus" Version="5.7.0" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
         <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="6.0.0" />
         <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="4.1.1" />
@@ -24,5 +19,8 @@
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <CopyToPublishDirectory>Never</CopyToPublishDirectory>
         </None>
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\Firepuma.Scheduling.Infrastructure\Firepuma.Scheduling.Infrastructure.csproj" />
     </ItemGroup>
 </Project>

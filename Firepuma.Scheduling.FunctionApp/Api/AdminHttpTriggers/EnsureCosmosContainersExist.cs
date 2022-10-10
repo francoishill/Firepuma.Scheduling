@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Firepuma.DatabaseRepositories.CosmosDb.Services;
-using Firepuma.Scheduling.FunctionApp.Config;
+using Firepuma.Scheduling.FunctionApp.Configuration;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -29,11 +29,7 @@ public class EnsureCosmosContainersExist
     {
         log.LogInformation("C# HTTP trigger function processed a request");
 
-        var containersToCreate = new[]
-        {
-            CosmosContainersConfig.CommandExecutions,
-            CosmosContainersConfig.ScheduledJobs,
-        };
+        var containersToCreate = CosmosContainerConfiguration.AllContainers;
 
         var result = await _cosmosDbAdminService.CreateContainersIfNotExist(containersToCreate, cancellationToken);
 
