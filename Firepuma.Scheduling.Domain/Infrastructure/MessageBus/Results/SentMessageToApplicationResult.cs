@@ -2,6 +2,6 @@
 
 public class SentMessageToApplicationResult
 {
-    public string MessageId { get; init; }
-    public string MessageTypeName { get; init; }
+    public string MessageId { get; init; } = null!;
+    public string MessageTypeName { get; init; } = null!;
 }

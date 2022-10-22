@@ -20,7 +20,7 @@ public static class SchedulingBusMessageMappings
         [typeof(SchedulingJobDueBusMessage)] = MessageTypeNames.SchedulingJobDueMessage,
     };
 
-    private static readonly IReadOnlyDictionary<string, Func<BinaryData, object>> _messageDeserializers = new Dictionary<string, Func<BinaryData, object>>
+    private static readonly IReadOnlyDictionary<string, Func<BinaryData, object?>> _messageDeserializers = new Dictionary<string, Func<BinaryData, object?>>
     {
         [MessageTypeNames.SchedulingJobDueMessage] = messageData => JsonConvert.DeserializeObject<SchedulingJobDueBusMessage>(messageData.ToString()),
     };
@@ -30,7 +30,7 @@ public static class SchedulingBusMessageMappings
         return _messageTypeNameMap[eventData.GetType()];
     }
 
-    public static bool TryGetPaymentMessage(ServiceBusReceivedMessage busMessage, out object eventData)
+    public static bool TryGetPaymentMessage(ServiceBusReceivedMessage busMessage, out object? eventData)
     {
         try
         {

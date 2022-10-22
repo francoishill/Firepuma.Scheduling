@@ -22,10 +22,10 @@ public class CronCalculator : ICronCalculator
             return startTime;
         }
 
-        var expression = CronExpression.Parse(scheduledJob.RecurringSettings.CronExpression);
+        var expression = CronExpression.Parse(scheduledJob.RecurringSettings!.CronExpression);
 
         var userTimeZoneInfo = TimeZoneInfo.CreateCustomTimeZone("faketimezone", TimeSpan.FromMinutes(scheduledJob.RecurringSettings.UtcOffsetInMinutes), null, null);
-        var nextTriggerTime = expression.GetNextOccurrence(startTime, userTimeZoneInfo);
+        var nextTriggerTime = expression.GetNextOccurrence(startTime, userTimeZoneInfo, inclusive: true);
 
         if (nextTriggerTime == null)
         {

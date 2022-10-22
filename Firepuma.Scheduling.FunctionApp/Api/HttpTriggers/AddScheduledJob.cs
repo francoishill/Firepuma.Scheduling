@@ -46,7 +46,7 @@ public class AddScheduledJob
 
         if (!requestDto.Validate(out var validationResultsForRequest))
         {
-            return HttpResponseFactory.CreateBadRequestResponse("Request is invalid", validationResultsForRequest.Select(s => s.ErrorMessage).ToArray());
+            return HttpResponseFactory.CreateBadRequestResponse("Request is invalid", validationResultsForRequest.Select(s => s.ErrorMessage ?? "[NULL error]").ToArray());
         }
 
         var addCommand = new AddScheduledJobCommand.Payload
@@ -59,7 +59,7 @@ public class AddScheduledJob
                 ? new ScheduledJob.JobRecurringSettings
                 {
                     UtcOffsetInMinutes = requestDto.RecurringUtcOffsetInMinutes ?? throw new ArgumentNullException($"{nameof(requestDto.RecurringUtcOffsetInMinutes)} cannot be null"),
-                    CronExpression = requestDto.RecurringCronExpression,
+                    CronExpression = requestDto.RecurringCronExpression!,
                 }
                 : null,
             ExtraValues = requestDto.ExtraValues,

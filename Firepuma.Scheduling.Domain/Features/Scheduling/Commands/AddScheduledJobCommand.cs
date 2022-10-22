@@ -18,22 +18,22 @@ public static class AddScheduledJobCommand
 {
     public class Payload : BaseCommand<Result>
     {
-        public string CorrelationId { get; set; }
+        public string? CorrelationId { get; set; }
 
-        public string ApplicationId { get; set; }
+        public string ApplicationId { get; set; } = null!;
 
         public DateTime StartTime { get; set; }
 
         public bool IsRecurring { get; set; }
 
-        public ScheduledJob.JobRecurringSettings RecurringSettings { get; set; }
+        public ScheduledJob.JobRecurringSettings? RecurringSettings { get; set; } = null!;
 
-        public JObject ExtraValues { get; set; }
+        public JObject? ExtraValues { get; set; } = null!;
     }
 
     public class Result
     {
-        public string ScheduledJobId { get; set; }
+        public string ScheduledJobId { get; set; } = null!;
     }
 
     public class Handler : IRequestHandler<Payload, Result>

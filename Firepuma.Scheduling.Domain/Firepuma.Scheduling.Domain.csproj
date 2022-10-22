@@ -3,11 +3,12 @@
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Firepuma.CommandsAndQueries.Abstractions" Version="0.6.9" />
-      <PackageReference Include="Firepuma.DatabaseRepositories.Abstractions" Version="0.6.7" />
+      <PackageReference Include="Firepuma.CommandsAndQueries.Abstractions" Version="0.6.10" />
+      <PackageReference Include="Firepuma.DatabaseRepositories.Abstractions" Version="0.6.9" />
     </ItemGroup>
 
 </Project>

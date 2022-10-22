@@ -13,7 +13,7 @@ public class AddScheduledJobRequest
 {
     [Required]
     [MinLength(2)]
-    public string ApplicationId { get; set; }
+    public string ApplicationId { get; set; } = null!;
 
     [Required]
     public bool? IsRecurring { get; set; }
@@ -21,10 +21,10 @@ public class AddScheduledJobRequest
     public DateTime? StartTime { get; set; }
 
     public int? RecurringUtcOffsetInMinutes { get; set; }
-    public string RecurringCronExpression { get; set; }
+    public string? RecurringCronExpression { get; set; }
 
     [Required]
-    public JObject ExtraValues { get; set; }
+    public JObject? ExtraValues { get; set; }
 
     public bool Validate(out List<ValidationResult> validationResults)
     {

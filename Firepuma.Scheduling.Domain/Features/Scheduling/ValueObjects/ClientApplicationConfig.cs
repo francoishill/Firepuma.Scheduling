@@ -34,8 +34,8 @@ public class ClientApplicationConfigs : Dictionary<string, ClientApplicationConf
 public class ClientApplicationConfig
 {
     [Required]
-    public string ApplicationId { get; set; }
+    public string ApplicationId { get; set; } = null!;
 
     [Required]
-    public string QueueName { get; set; }
+    public string QueueName { get; set; } = null!;
 }

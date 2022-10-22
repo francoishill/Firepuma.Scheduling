@@ -15,9 +15,9 @@ public class ScheduledJob : BaseEntity
     public DateTime NextTriggerTime { get; set; } = DateTime.MinValue;
     public bool IsRecurring { get; init; }
 
-    public JobRecurringSettings RecurringSettings { get; set; }
+    public JobRecurringSettings? RecurringSettings { get; set; }
 
-    public JObject ExtraValues { get; set; }
+    public JObject? ExtraValues { get; set; }
 
     public JobMetadata Metadata { get; set; } = new();
 
@@ -55,7 +55,7 @@ public class ScheduledJob : BaseEntity
 
     public class JobRecurringSettings
     {
-        public string CronExpression { get; set; }
+        public string CronExpression { get; set; } = null!;
         public int UtcOffsetInMinutes { get; set; }
     }
 
@@ -63,7 +63,7 @@ public class ScheduledJob : BaseEntity
     {
         public DateTime PreviousTriggeredTime { get; set; } = DateTime.MinValue;
         public bool PreviousTriggerWasSuccessful { get; set; }
-        public string PreviousError { get; set; }
+        public string? PreviousError { get; set; }
 
         public int TotalSuccessCount { get; set; }
         public int ConsecutiveSuccessCount { get; set; }

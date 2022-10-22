@@ -3,12 +3,13 @@
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
     
     <ItemGroup>
         <PackageReference Include="Cronos" Version="0.7.1" />
-        <PackageReference Include="Firepuma.CommandsAndQueries.CosmosDb" Version="0.6.9" />
-        <PackageReference Include="Firepuma.DatabaseRepositories.CosmosDb" Version="0.6.7" />
+        <PackageReference Include="Firepuma.CommandsAndQueries.CosmosDb" Version="0.6.10" />
+        <PackageReference Include="Firepuma.DatabaseRepositories.CosmosDb" Version="0.6.9" />
         <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.ServiceBus" Version="5.7.0" />
     </ItemGroup>
     

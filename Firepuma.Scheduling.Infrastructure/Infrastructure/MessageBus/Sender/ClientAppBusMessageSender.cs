@@ -22,7 +22,7 @@ internal class ClientAppBusMessageSender : IClientAppBusMessageSender
         _sendersMap = sendersMap;
     }
 
-    private bool TryGetSender(ClientApplicationId applicationId, out ServiceBusSender sender)
+    private bool TryGetSender(ClientApplicationId applicationId, out ServiceBusSender? sender)
     {
         if (!_sendersMap.TryGetValue(applicationId, out sender))
         {
@@ -61,7 +61,7 @@ internal class ClientAppBusMessageSender : IClientAppBusMessageSender
             "Sending message with messageId {MessageId}, messageType {Type}, correlationId {CorrelationId}",
             busMessage.MessageId, messageTypeName, correlationId);
 
-        await serviceBusSender.SendMessageAsync(busMessage, cancellationToken);
+        await serviceBusSender!.SendMessageAsync(busMessage, cancellationToken);
 
         _logger.LogInformation(
             "Sent message with messageId {MessageId}, messageType {Type}, correlationId {CorrelationId}",

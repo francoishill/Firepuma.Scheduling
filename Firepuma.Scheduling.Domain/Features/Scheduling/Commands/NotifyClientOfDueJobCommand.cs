@@ -20,14 +20,14 @@ public static class NotifyClientOfDueJobCommand
 {
     public class Payload : BaseCommand<Result>
     {
-        public string CorrelationId { get; set; }
-        public ScheduledJob ScheduledJob { get; init; }
+        public string CorrelationId { get; set; } = null!;
+        public ScheduledJob ScheduledJob { get; init; } = null!;
     }
 
     public class Result
     {
-        public string BusMessageId { get; set; }
-        public string BusMessageTypeName { get; set; }
+        public string BusMessageId { get; set; } = null!;
+        public string BusMessageTypeName { get; set; } = null!;
     }
 
     public class Handler : IRequestHandler<Payload, Result>
@@ -75,7 +75,7 @@ public static class NotifyClientOfDueJobCommand
                     RecurringSettings = scheduledJob.IsRecurring
                         ? new SchedulingJobDueBusMessage.JobRecurringSettings
                         {
-                            UtcOffsetInMinutes = scheduledJob.RecurringSettings.UtcOffsetInMinutes,
+                            UtcOffsetInMinutes = scheduledJob.RecurringSettings!.UtcOffsetInMinutes,
                             CronExpression = scheduledJob.RecurringSettings.CronExpression,
                         }
                         : null,

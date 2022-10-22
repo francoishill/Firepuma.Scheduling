@@ -13,17 +13,17 @@ public class SchedulingJobDueBusMessage : ISchedulingBusMessage
     public DateTime? NextTriggerTime { get; init; }
     public bool IsRecurring { get; init; }
 
-    public JobRecurringSettings RecurringSettings { get; set; }
+    public JobRecurringSettings? RecurringSettings { get; set; }
 
-    public JObject ExtraValues { get; set; }
+    public JObject? ExtraValues { get; set; }
 
-    public JobMetadata Metadata { get; set; }
+    public JobMetadata Metadata { get; set; } = null!;
 
     public DateTime CreatedOn { get; set; }
 
     public class JobRecurringSettings
     {
-        public string CronExpression { get; set; }
+        public string CronExpression { get; set; } = null!;
         public int UtcOffsetInMinutes { get; set; }
     }
 
@@ -31,7 +31,7 @@ public class SchedulingJobDueBusMessage : ISchedulingBusMessage
     {
         public DateTime PreviousTriggeredTime { get; init; }
         public bool PreviousTriggerWasSuccessful { get; set; }
-        public string PreviousError { get; set; }
+        public string? PreviousError { get; set; } = null!;
 
         public int TotalSuccessCount { get; set; }
         public int ConsecutiveSuccessCount { get; set; }
