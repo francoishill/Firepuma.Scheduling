@@ -8,8 +8,8 @@
     
     <ItemGroup>
         <PackageReference Include="Cronos" Version="0.7.1" />
-        <PackageReference Include="Firepuma.CommandsAndQueries.CosmosDb" Version="0.6.10" />
-        <PackageReference Include="Firepuma.DatabaseRepositories.CosmosDb" Version="0.6.9" />
+        <PackageReference Include="Firepuma.CommandsAndQueries.CosmosDb" Version="0.7.0" />
+        <PackageReference Include="Firepuma.DatabaseRepositories.CosmosDb" Version="0.7.0" />
         <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.ServiceBus" Version="5.7.0" />
     </ItemGroup>
     
