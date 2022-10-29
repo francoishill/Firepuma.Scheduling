@@ -69,7 +69,7 @@ public static class AddScheduledJobCommand
                 scheduledJob.RecurringSettings = payload.RecurringSettings;
             }
 
-            scheduledJob.NextTriggerTime = _cronCalculator.CalculateNextTriggerTime(scheduledJob, payload.StartTime);
+            scheduledJob.NextTriggerTime = _cronCalculator.CalculateNextTriggerTime(scheduledJob, payload.StartTime, false);
 
             await _scheduledJobRepository.AddItemAsync(scheduledJob, cancellationToken);
 

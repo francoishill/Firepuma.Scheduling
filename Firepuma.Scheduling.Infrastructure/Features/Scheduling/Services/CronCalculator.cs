@@ -15,7 +15,10 @@ public class CronCalculator : ICronCalculator
         _logger = logger;
     }
 
-    public DateTime CalculateNextTriggerTime(ScheduledJob scheduledJob, DateTime startTime)
+    public DateTime CalculateNextTriggerTime(
+        ScheduledJob scheduledJob,
+        DateTime startTime,
+        bool ignoreValueOfCurrentNextTriggerTime)
     {
         if (!scheduledJob.IsRecurring)
         {
@@ -25,7 +28,12 @@ public class CronCalculator : ICronCalculator
         var expression = CronExpression.Parse(scheduledJob.RecurringSettings!.CronExpression);
 
         var userTimeZoneInfo = TimeZoneInfo.CreateCustomTimeZone("faketimezone", TimeSpan.FromMinutes(scheduledJob.RecurringSettings.UtcOffsetInMinutes), null, null);
-        var nextTriggerTime = expression.GetNextOccurrence(startTime, userTimeZoneInfo, inclusive: true);
+
+        var fromTime = ignoreValueOfCurrentNextTriggerTime || scheduledJob.NextTriggerTime == DateTime.MinValue
+            ? startTime
+            : startTime > scheduledJob.NextTriggerTime ? startTime : scheduledJob.NextTriggerTime.AddMilliseconds(1);
+
+        var nextTriggerTime = expression.GetNextOccurrence(fromTime, userTimeZoneInfo, inclusive: true);
 
         if (nextTriggerTime == null)
         {

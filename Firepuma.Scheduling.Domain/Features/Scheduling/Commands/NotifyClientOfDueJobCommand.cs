@@ -63,7 +63,7 @@ public static class NotifyClientOfDueJobCommand
             {
                 var nextTriggerTime =
                     scheduledJob.IsRecurring
-                        ? _cronCalculator.CalculateNextTriggerTime(scheduledJob, DateTime.UtcNow.AddSeconds(1))
+                        ? _cronCalculator.CalculateNextTriggerTime(scheduledJob, DateTime.UtcNow.AddSeconds(1), false)
                         : (DateTime?)null;
 
                 var messageDto = new SchedulingJobDueBusMessage

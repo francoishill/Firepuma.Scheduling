@@ -6,5 +6,6 @@ public interface ICronCalculator
 {
     DateTime CalculateNextTriggerTime(
         ScheduledJob scheduledJob,
-        DateTime startTime);
+        DateTime startTime,
+        bool ignoreValueOfCurrentNextTriggerTime);
 }

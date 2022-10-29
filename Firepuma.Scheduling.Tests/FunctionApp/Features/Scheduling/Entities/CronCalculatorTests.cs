@@ -24,7 +24,7 @@ public class CronCalculatorTests
         var cronCalculator = new CronCalculator(Substitute.For<ILogger<CronCalculator>>());
 
         // Act
-        scheduledJob.NextTriggerTime = cronCalculator.CalculateNextTriggerTime(scheduledJob, startTime);
+        scheduledJob.NextTriggerTime = cronCalculator.CalculateNextTriggerTime(scheduledJob, startTime, false);
 
         // Assert
         Assert.Equal(DateTime.Parse(expectedNextTriggerTime, null, System.Globalization.DateTimeStyles.RoundtripKind), scheduledJob.NextTriggerTime);
@@ -60,7 +60,7 @@ public class CronCalculatorTests
         var cronCalculator = new CronCalculator(Substitute.For<ILogger<CronCalculator>>());
 
         // Act
-        scheduledJob.NextTriggerTime = cronCalculator.CalculateNextTriggerTime(scheduledJob, startTime);
+        scheduledJob.NextTriggerTime = cronCalculator.CalculateNextTriggerTime(scheduledJob, startTime, false);
 
         // Assert
         Assert.Equal(DateTime.Parse(expectedNextTriggerTime, null, System.Globalization.DateTimeStyles.RoundtripKind), scheduledJob.NextTriggerTime);
@@ -90,7 +90,7 @@ public class CronCalculatorTests
         var cronCalculator = new CronCalculator(Substitute.For<ILogger<CronCalculator>>());
 
         // Act
-        scheduledJob.NextTriggerTime = cronCalculator.CalculateNextTriggerTime(scheduledJob, startTime);
+        scheduledJob.NextTriggerTime = cronCalculator.CalculateNextTriggerTime(scheduledJob, startTime, false);
 
         // Assert
         Assert.Equal(DateTime.Parse(expectedNextTriggerTime, null, System.Globalization.DateTimeStyles.RoundtripKind), scheduledJob.NextTriggerTime);
@@ -125,9 +125,59 @@ public class CronCalculatorTests
         var cronCalculator = new CronCalculator(Substitute.For<ILogger<CronCalculator>>());
 
         // Act
-        scheduledJob.NextTriggerTime = cronCalculator.CalculateNextTriggerTime(scheduledJob, startTime);
+        scheduledJob.NextTriggerTime = cronCalculator.CalculateNextTriggerTime(scheduledJob, startTime, false);
 
         // Assert
         Assert.Equal(DateTime.Parse(expectedNextTriggerTime, null, System.Globalization.DateTimeStyles.RoundtripKind), scheduledJob.NextTriggerTime);
+    }
+
+    [Fact]
+    public void CalculateNextTriggerTime_IgnoreValueOfCurrentNextTriggerTime_is_false()
+    {
+        // Arrange
+        var oldNextTriggerTime = new DateTime(2022, 10, 29, 04, 0, 0, DateTimeKind.Utc);
+        var earlyTriggerRunTime = new DateTime(2022, 10, 29, 3, 50, 0, DateTimeKind.Utc);
+        var scheduledJob = new ScheduledJob
+        {
+            IsRecurring = true,
+            RecurringSettings = new ScheduledJob.JobRecurringSettings
+            {
+                UtcOffsetInMinutes = 60,
+                CronExpression = "0 * * * *",
+            },
+            NextTriggerTime = oldNextTriggerTime,
+        };
+        var cronCalculator = new CronCalculator(Substitute.For<ILogger<CronCalculator>>());
+
+        // Act
+        var newNextTriggerTime = cronCalculator.CalculateNextTriggerTime(scheduledJob, earlyTriggerRunTime.AddSeconds(1), false);
+
+        // Assert
+        Assert.NotEqual(oldNextTriggerTime.ToString("O"), newNextTriggerTime.ToString("O"));
+    }
+
+    [Fact]
+    public void CalculateNextTriggerTime_IgnoreValueOfCurrentNextTriggerTime_is_true()
+    {
+        // Arrange
+        var oldNextTriggerTime = new DateTime(2022, 10, 29, 04, 0, 0, DateTimeKind.Utc);
+        var earlyTriggerRunTime = new DateTime(2022, 10, 29, 3, 50, 0, DateTimeKind.Utc);
+        var scheduledJob = new ScheduledJob
+        {
+            IsRecurring = true,
+            RecurringSettings = new ScheduledJob.JobRecurringSettings
+            {
+                UtcOffsetInMinutes = 60,
+                CronExpression = "0 * * * *",
+            },
+            NextTriggerTime = oldNextTriggerTime,
+        };
+        var cronCalculator = new CronCalculator(Substitute.For<ILogger<CronCalculator>>());
+
+        // Act
+        var newNextTriggerTime = cronCalculator.CalculateNextTriggerTime(scheduledJob, earlyTriggerRunTime.AddSeconds(1), true);
+
+        // Assert
+        Assert.Equal(oldNextTriggerTime.ToString("O"), newNextTriggerTime.ToString("O"));
     }
 }
