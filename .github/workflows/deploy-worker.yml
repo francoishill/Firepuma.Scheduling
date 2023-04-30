@@ -12,7 +12,7 @@ env:
   ARTIFACT_REGISTRY: europe-west1-docker.pkg.dev
   IMAGE_REPOSITORY: firepuma-microservices-artifact-repository
   REGION: europe-west1
-  SERVICE: firepuma-scheduling-worker
+  SERVICE: scheduling-service
   PUBSUB_TOPIC_NAME: projects/firepuma-microservices/topics/firepuma-scheduling
   BASE_VERSION: 0.1.0
 
