@@ -4,28 +4,25 @@ on:
   push:
     branches-ignore:
       - main
+  workflow_dispatch:
 
 env:
-  DOTNET_VERSION: '6.0'
+  DUMMY_VERSION: 0.0.1-dev-unit-tests
+  WORKER_ENTRY_PROJECT_DIR: Firepuma.Scheduling.Worker
+  WEBAPI_ENTRY_PROJECT_DIR: Firepuma.Scheduling.WebApi
 
 jobs:
   unit-tests:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
-      - name: 'Checkout GitHub Action'
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: Setup DotNet ${{ env.DOTNET_VERSION }} Environment
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: Build and Test Worker
+        env:
+          VERSION: ${{ env.DUMMY_VERSION }}
+        run: docker build --no-cache --progress plain --file ${{ env.WORKER_ENTRY_PROJECT_DIR }}/Dockerfile --build-arg version=${{ env.VERSION }} ./
 
-      - name: Install dependencies
-        run: |
-          dotnet restore Firepuma.Scheduling.Domain
-          dotnet restore Firepuma.Scheduling.FunctionApp
-          dotnet restore Firepuma.Scheduling.Infrastructure
-          dotnet restore Firepuma.Scheduling.Tests
-
-      - name: Test
-        run: dotnet test --no-restore
+      - name: Build and Test WebApi
+        env:
+          VERSION: ${{ env.DUMMY_VERSION }}
+        run: docker build --no-cache --progress plain --file ${{ env.WEBAPI_ENTRY_PROJECT_DIR }}/Dockerfile --build-arg version=${{ env.VERSION }} ./
