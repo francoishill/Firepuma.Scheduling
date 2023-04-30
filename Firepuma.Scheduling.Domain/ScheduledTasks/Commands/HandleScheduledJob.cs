@@ -1,8 +1,6 @@
 ﻿using Firepuma.CommandsAndQueries.Abstractions.Commands;
-using Firepuma.Scheduling.Domain.IntegrationEvents;
-using Firepuma.Scheduling.Domain.Plumbing.IntegrationEvents.Abstractions;
-using Firepuma.Scheduling.Domain.Plumbing.IntegrationEvents.Services;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace Firepuma.Scheduling.Domain.ScheduledTasks.Commands;
 
@@ -13,28 +11,45 @@ public class HandleScheduledJob : BaseCommand
     // ReSharper disable once UnusedType.Global
     public class CommandHandler : IRequestHandler<HandleScheduledJob>
     {
-        private readonly ICommandEventPublisher _commandEventPublisher;
+        private readonly ILogger<CommandHandler> _logger;
 
         public CommandHandler(
-            ICommandEventPublisher commandEventPublisher)
+            ILogger<CommandHandler> logger)
         {
-            _commandEventPublisher = commandEventPublisher;
+            _logger = logger;
         }
 
         public async Task Handle(HandleScheduledJob request, CancellationToken cancellationToken)
         {
-            object integrationEvent = request.ScheduledJobName switch
-            {
-                "notify-due-tasks" => new ScheduledNotifyDueTasks { CommandId = request.CommandId },
+            _logger.LogError(
+                "HandleScheduledJob is not implemented and cannot execute {ScheduledJobName}, see commented code below for example implementation",
+                request.ScheduledJobName);
 
-                _ => throw new Exception($"ScheduledJobName '{request.ScheduledJobName}' is not supported"),
-            };
-
-            await _commandEventPublisher.PublishAsync(
-                request,
-                integrationEvent,
-                new SendEventSelfTarget(),
-                cancellationToken);
+            await Task.CompletedTask;
         }
+
+        // private readonly ICommandEventPublisher _commandEventPublisher;
+        //
+        // public CommandHandler(
+        //     ICommandEventPublisher commandEventPublisher)
+        // {
+        //     _commandEventPublisher = commandEventPublisher;
+        // }
+        //
+        // public async Task Handle(HandleScheduledJob request, CancellationToken cancellationToken)
+        // {
+        //     object integrationEvent = request.ScheduledJobName switch
+        //     {
+        //         "notify-own-birthday" => new ScheduledNotifyOwnBirthdays { CommandId = request.CommandId },
+        //
+        //         _ => throw new Exception($"ScheduledJobName '{request.ScheduledJobName}' is not supported"),
+        //     };
+        //
+        //     await _commandEventPublisher.PublishAsync(
+        //         request,
+        //         integrationEvent,
+        //         new SendEventSelfTarget(),
+        //         cancellationToken);
+        // }
     }
 }

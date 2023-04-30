@@ -6,7 +6,10 @@ using Firepuma.BusMessaging.GooglePubSub.Config;
 using Firepuma.DatabaseRepositories.MongoDb.Abstractions.Indexes;
 using Firepuma.EventMediation.IntegrationEvents.Constants;
 using Firepuma.EventMediation.IntegrationEvents.ValueObjects;
+using Firepuma.Scheduling.Domain.Commands;
 using Firepuma.Scheduling.Domain.Plumbing.IntegrationEvents.Services;
+using Firepuma.Scheduling.Domain.QuerySpecifications;
+using Firepuma.Scheduling.Domain.Repositories;
 using Firepuma.Scheduling.Domain.ScheduledTasks.Commands;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -22,19 +25,22 @@ public class PubSubListenerController : ControllerBase
     private readonly IIntegrationEventHandler _integrationEventHandler;
     private readonly IMongoIndexesApplier _mongoIndexesApplier;
     private readonly IMediator _mediator;
+    private readonly IScheduledTaskRepository _scheduledTaskRepository;
 
     public PubSubListenerController(
         ILogger<PubSubListenerController> logger,
         IBusMessageParser busMessageParser,
         IIntegrationEventHandler integrationEventHandler,
         IMongoIndexesApplier mongoIndexesApplier,
-        IMediator mediator)
+        IMediator mediator,
+        IScheduledTaskRepository scheduledTaskRepository)
     {
         _logger = logger;
         _busMessageParser = busMessageParser;
         _integrationEventHandler = integrationEventHandler;
         _mongoIndexesApplier = mongoIndexesApplier;
         _mediator = mediator;
+        _scheduledTaskRepository = scheduledTaskRepository;
     }
 
     [HttpPost]
@@ -63,11 +69,18 @@ public class PubSubListenerController : ControllerBase
                         "Detected a ScheduledJob with job name '{JobName}', will not start its execution",
                         jobName);
 
-                    var handleCommand = new HandleScheduledJob
+                    if (jobName == "notify-due-tasks")
                     {
-                        ScheduledJobName = jobName,
-                    };
-                    await _mediator.Send(handleCommand, cancellationToken);
+                        await NotifyDueTasksAsync(cancellationToken);
+                    }
+                    else
+                    {
+                        var handleCommand = new HandleScheduledJob
+                        {
+                            ScheduledJobName = jobName,
+                        };
+                        await _mediator.Send(handleCommand, cancellationToken);
+                    }
 
                     return Ok($"Handled ScheduledJob with name {jobName}");
                 }
@@ -148,6 +161,44 @@ public class PubSubListenerController : ControllerBase
         }
 
         return Accepted(integrationEventEnvelope);
+    }
+
+    private async Task NotifyDueTasksAsync(CancellationToken cancellationToken)
+    {
+        var checkAheadDuration = TimeSpan.FromSeconds(55);
+        var nowWithAddedBufferForProcessingTime = DateTime.UtcNow.Add(checkAheadDuration);
+        var querySpecification = new ScheduledTaskQuerySpecifications.DueNow(nowWithAddedBufferForProcessingTime);
+
+        var scheduledTasks = (await _scheduledTaskRepository.GetItemsAsync(querySpecification, cancellationToken)).ToList();
+
+        if (scheduledTasks.Any())
+        {
+            _logger.LogInformation("Notifying applications of {Count} due tasks", scheduledTasks.Count);
+        }
+
+        var commands = scheduledTasks
+            .Select(task => new NotifyDueTask
+            {
+                ScheduledTask = task,
+            });
+
+        var commandTasks = commands
+            .Select(async command =>
+            {
+                try
+                {
+                    await _mediator.Send(command, cancellationToken);
+                }
+                catch (Exception exception)
+                {
+                    _logger.LogError(
+                        exception,
+                        "Failed to NotifyDueTask, ScheduledTaskId: {ScheduledTask} ApplicationId: {ApplicationId}, ExtraValues: {ExtraValues}",
+                        command.ScheduledTask.Id, command.ScheduledTask.ApplicationId, JsonSerializer.Serialize(command.ScheduledTask.ExtraValues));
+                }
+            });
+
+        await Task.WhenAll(commandTasks);
     }
 
     private static bool TryDecodeBase64String(
