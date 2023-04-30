@@ -19,7 +19,7 @@ namespace Firepuma.Scheduling.Domain.Commands;
 
 public class NotifyDueTask : BaseCommand<NotifyDueTask.Result>
 {
-    public ScheduledTask ScheduledTask { get; init; } = null!;
+    public required ScheduledTask ScheduledTask { get; init; }
 
     public class Result
     {
