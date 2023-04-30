@@ -13,7 +13,7 @@ env:
   IMAGE_REPOSITORY: firepuma-microservices-artifact-repository
   REGION: europe-west1
   SERVICE: scheduling-service
-  PUBSUB_TOPIC_NAME: projects/firepuma-microservices/topics/firepuma-scheduling
+  PUBSUB_TOPIC_NAME: projects/firepuma-microservices/topics/scheduling-service
   BASE_VERSION: 0.1.0
 
 jobs:
