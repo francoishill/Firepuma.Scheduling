@@ -19,7 +19,9 @@ public class InAndOutgoingIntegrationEventTests
             })
             .Where(x => x.IncomingAttribute != null && x.OutgoingAttribute != null)
             .ToList();
-        Assert.NotEmpty(typesWithBoth);
+
+        //TODO: uncomment this if we ever add integration events with both IncomingIntegrationEventType and OutgoingIntegrationEventType attributes (for events handled by self)
+        // Assert.NotEmpty(typesWithBoth);
 
         // Act
         var typesWhereTypesDiffer = typesWithBoth
