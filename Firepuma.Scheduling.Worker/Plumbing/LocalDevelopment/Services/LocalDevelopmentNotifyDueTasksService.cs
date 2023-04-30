@@ -37,18 +37,18 @@ internal class LocalDevelopmentNotifyDueTasksService : BackgroundService
             if (scheduledTasks.Any())
             {
                 _logger.LogInformation("Notifying applications of {Count} due tasks", scheduledTasks.Count);
+
+                var commands = scheduledTasks
+                    .Select(task => new NotifyDueTask
+                    {
+                        ScheduledTask = task,
+                    });
+
+                var commandTasks = commands
+                    .Select(command => _mediator.Send(command, stoppingToken));
+
+                await Task.WhenAll(commandTasks);
             }
-
-            var commands = scheduledTasks
-                .Select(task => new NotifyDueTask
-                {
-                    ScheduledTask = task,
-                });
-
-            var commandTasks = commands
-                .Select(command => _mediator.Send(command, stoppingToken));
-
-            await Task.WhenAll(commandTasks);
 
             await Task.Delay(interval, stoppingToken);
         }

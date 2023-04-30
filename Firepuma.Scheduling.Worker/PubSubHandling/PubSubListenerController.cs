@@ -1,8 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Firepuma.BusMessaging.Abstractions.Config;
 using Firepuma.BusMessaging.Abstractions.Services;
-using Firepuma.BusMessaging.GooglePubSub.Config;
 using Firepuma.DatabaseRepositories.MongoDb.Abstractions.Indexes;
 using Firepuma.EventMediation.IntegrationEvents.Constants;
 using Firepuma.EventMediation.IntegrationEvents.ValueObjects;
@@ -133,14 +133,14 @@ public class PubSubListenerController : ControllerBase
         }
 
         var integrationEventEnvelope =
-            parsedMessageEnvelope.MessageId != BusMessagingPubSubConstants.LOCAL_DEVELOPMENT_PARSED_MESSAGE_ID
-                ? messagePayload.Deserialize<IntegrationEventEnvelope>()
-                : new IntegrationEventEnvelope // this version is typically used for local development
+            parsedMessageEnvelope.MessageId?.Contains(BusMessagingPubSubConstants.LOCAL_DEVELOPMENT_PARSED_MESSAGE_ID_SUFFIX) == true
+                ? new IntegrationEventEnvelope // this version is typically used for local development
                 {
                     EventId = parsedMessageEnvelope.MessageId,
                     EventType = messageType,
                     EventPayload = parsedMessageEnvelope.MessagePayload!,
-                };
+                }
+                : messagePayload.Deserialize<IntegrationEventEnvelope>();
 
         if (integrationEventEnvelope == null)
         {
