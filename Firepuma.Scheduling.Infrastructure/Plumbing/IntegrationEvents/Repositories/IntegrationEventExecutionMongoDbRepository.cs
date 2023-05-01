@@ -9,7 +9,7 @@ namespace Firepuma.Scheduling.Infrastructure.Plumbing.IntegrationEvents.Reposito
 public class IntegrationEventExecutionMongoDbRepository : MongoDbRepository<IntegrationEventExecution>, IIntegrationEventExecutionRepository
 {
     public IntegrationEventExecutionMongoDbRepository(ILogger logger, IMongoCollection<IntegrationEventExecution> collection)
-        : base(logger, collection)
+        : base(logger, collection, LogLevel.Debug, LogLevel.Debug, LogLevel.Debug)
     {
     }
 }

@@ -68,7 +68,7 @@ public class CommandExecutionMongoDbQueryService : ICommandExecutionQueryService
                 //TODO: Add this if the project has Users and an ActorContext
                 // || (x.ActorContext != null && x.ActorContext.ActorName.ToLower().Contains(textSearchLowerCase))
                 || x.ErrorMessage!.ToLower().Contains(textSearchLowerCase)
-                || x.ErrorStackTrack!.ToLower().Contains(textSearchLowerCase)
+                || x.ErrorStackTrace!.ToLower().Contains(textSearchLowerCase)
                 || x.Payload.ToLower().Contains(textSearchLowerCase)
                 || x.Result!.ToLower().Contains(textSearchLowerCase)
             );

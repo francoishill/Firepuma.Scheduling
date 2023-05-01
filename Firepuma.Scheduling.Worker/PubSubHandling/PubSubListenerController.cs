@@ -65,7 +65,7 @@ public class PubSubListenerController : ControllerBase
                 {
                     var jobName = messageDataString.Substring("ScheduledJob:".Length);
 
-                    _logger.LogInformation(
+                    _logger.LogDebug(
                         "Detected a ScheduledJob with job name '{JobName}', will not start its execution",
                         jobName);
 

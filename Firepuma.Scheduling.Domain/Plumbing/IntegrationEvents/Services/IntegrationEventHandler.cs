@@ -45,7 +45,7 @@ public class IntegrationEventHandler : IIntegrationEventHandler
         {
             if (!TryDeserializeIntegrationEvent(integrationEventEnvelope, out var eventPayload))
             {
-                _logger.LogError(
+                _logger.LogWarning(
                     "Unable to deserialize integration event with type {Type} and id {Id}",
                     integrationEventEnvelope.EventType, integrationEventEnvelope.EventId);
                 return false;

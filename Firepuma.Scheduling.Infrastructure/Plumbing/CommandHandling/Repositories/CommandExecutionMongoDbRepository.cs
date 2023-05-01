@@ -11,7 +11,7 @@ internal class CommandExecutionMongoDbRepository : MongoDbRepository<CommandExec
     public CommandExecutionMongoDbRepository(
         ILogger logger,
         IMongoCollection<CommandExecutionMongoDbEvent> collection)
-        : base(logger, collection)
+        : base(logger, collection, LogLevel.Debug, LogLevel.Debug, LogLevel.Debug)
     {
     }
 }

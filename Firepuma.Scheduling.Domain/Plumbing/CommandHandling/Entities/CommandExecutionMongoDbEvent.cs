@@ -28,9 +28,9 @@ public class CommandExecutionMongoDbEvent : BaseMongoDbEntity, ICommandExecution
     public bool? Successful { get; set; }
     public string? Result { get; set; }
     public string? ErrorMessage { get; set; }
-    public string? ErrorStackTrack { get; set; }
-    public double ExecutionTimeInSeconds { get; set; }
-    public double TotalTimeInSeconds { get; set; }
+    public string? ErrorStackTrace { get; set; }
+    public double? ExecutionTimeInSeconds { get; set; }
+    public double? TotalTimeInSeconds { get; set; }
 
     public Dictionary<string, object?> ExtraValues { get; set; } = new();
 

@@ -8,8 +8,8 @@
 
     <ItemGroup>
       <PackageReference Include="Cronos" Version="0.7.1" />
-      <PackageReference Include="Firepuma.BusMessaging.GooglePubSub" Version="0.11.2" />
-      <PackageReference Include="Firepuma.DatabaseRepositories.MongoDb" Version="0.22.0" />
+      <PackageReference Include="Firepuma.BusMessaging.GooglePubSub" Version="0.12.0" />
+      <PackageReference Include="Firepuma.DatabaseRepositories.MongoDb" Version="0.22.1" />
       <PackageReference Include="Google.Cloud.Diagnostics.AspNetCore3" Version="5.1.0" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
     </ItemGroup>
