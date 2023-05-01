@@ -66,7 +66,7 @@ public class PubSubListenerController : ControllerBase
                     var jobName = messageDataString.Substring("ScheduledJob:".Length);
 
                     _logger.LogDebug(
-                        "Detected a ScheduledJob with job name '{JobName}', will not start its execution",
+                        "Detected a ScheduledJob with job name '{JobName}', will now start its execution",
                         jobName);
 
                     if (jobName == "notify-due-tasks")
