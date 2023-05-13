@@ -1,0 +1,18 @@
+version: "3.8"
+services:
+  firepuma-scheduling:
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Firepuma.Scheduling.Worker/Dockerfile
+      args:
+        - version=0.0.0-local-dev
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - GOOGLE_APPLICATION_CREDENTIALS=/tmp/keys/application_default_credentials.json
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - $APPDATA/gcloud/application_default_credentials.json:/tmp/keys/application_default_credentials.json:ro
+    image: firepuma-scheduling-local:latest
+    container_name: firepuma-scheduling-local-1

@@ -106,3 +106,9 @@ docker build --tag tmp-test-firepuma-scheduling-webapi --progress plain --file F
 docker build --tag tmp-test-firepuma-scheduling-worker --progress plain --file Firepuma.Scheduling.Worker/Dockerfile --build-arg version=0.0.0-dev-from-readme .
 && docker run --rm --name tmp-webapi tmp-test-firepuma-scheduling-worker
 ```
+
+## Start in docker locally
+
+```shell
+docker-compose up --build -d && docker-compose logs -f
+```

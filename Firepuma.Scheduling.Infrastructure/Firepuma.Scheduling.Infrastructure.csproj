@@ -12,6 +12,7 @@
       <PackageReference Include="Firepuma.DatabaseRepositories.MongoDb" Version="0.22.1" />
       <PackageReference Include="Google.Cloud.Diagnostics.AspNetCore3" Version="5.1.0" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
+      <PackageReference Include="NLog.Web.AspNetCore" Version="5.2.3" />
     </ItemGroup>
 
     <ItemGroup>

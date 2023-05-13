@@ -9,6 +9,7 @@ using Firepuma.Scheduling.Infrastructure.Scheduling;
 using Firepuma.Scheduling.Worker.Admin;
 using Firepuma.Scheduling.Worker.Plumbing.LocalDevelopment;
 using Firepuma.Scheduling.Worker.Plumbing.Middleware;
+using NLog.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,6 +51,8 @@ builder.Services.AddSchedulingFeature(
 var googleLoggingConfigSection = builder.Configuration.GetSection("Logging:GoogleLogging");
 builder.Logging.AddCustomGoogleLogging(googleLoggingConfigSection);
 
+builder.Host.UseNLog();
+
 if (builder.Environment.IsDevelopment())
 {
     var localDevelopmentOptionsConfigSection = builder.Configuration.GetSection("LocalDevelopment");
@@ -79,4 +82,12 @@ if (port != null)
     app.Urls.Add($"http://0.0.0.0:{port}");
 }
 
-app.Run();
+try
+{
+    app.Run();
+}
+finally
+{
+    // Ensure to flush and stop internal timers/threads before application-exit (Avoid segmentation fault on Linux)
+    NLog.LogManager.Shutdown();
+}
