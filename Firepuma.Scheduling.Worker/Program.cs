@@ -5,6 +5,7 @@ using Firepuma.Scheduling.Infrastructure.Plumbing.CommandHandling;
 using Firepuma.Scheduling.Infrastructure.Plumbing.GoogleLogging;
 using Firepuma.Scheduling.Infrastructure.Plumbing.IntegrationEvents;
 using Firepuma.Scheduling.Infrastructure.Plumbing.MongoDb;
+using Firepuma.Scheduling.Infrastructure.Plumbing.NLogLogging;
 using Firepuma.Scheduling.Infrastructure.Scheduling;
 using Firepuma.Scheduling.Worker.Admin;
 using Firepuma.Scheduling.Worker.Plumbing.LocalDevelopment;
@@ -53,8 +54,8 @@ builder.Logging.AddCustomGoogleLogging(googleLoggingConfigSection);
 
 if (builder.Environment.IsDevelopment())
 {
-    // only add NLog for DEV, otherwise it will try log to udp://host.docker.internal:9999 in PROD
-    builder.Host.UseNLog();
+    // only add NLog for DEV, otherwise it will try log to local/docker udp port 9999 in PROD
+    builder.Logging.AddNLogWeb(new NLog.Config.LoggingConfiguration().AddLocalLog4ViewerNLogTarget());
 
     var localDevelopmentOptionsConfigSection = builder.Configuration.GetSection("LocalDevelopment");
     builder.Services.AddLocalDevelopmentServices(localDevelopmentOptionsConfigSection);
