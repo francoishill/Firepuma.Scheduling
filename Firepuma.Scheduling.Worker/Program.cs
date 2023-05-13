@@ -51,10 +51,11 @@ builder.Services.AddSchedulingFeature(
 var googleLoggingConfigSection = builder.Configuration.GetSection("Logging:GoogleLogging");
 builder.Logging.AddCustomGoogleLogging(googleLoggingConfigSection);
 
-builder.Host.UseNLog();
-
 if (builder.Environment.IsDevelopment())
 {
+    // only add NLog for DEV, otherwise it will try log to udp://host.docker.internal:9999 in PROD
+    builder.Host.UseNLog();
+
     var localDevelopmentOptionsConfigSection = builder.Configuration.GetSection("LocalDevelopment");
     builder.Services.AddLocalDevelopmentServices(localDevelopmentOptionsConfigSection);
 }
