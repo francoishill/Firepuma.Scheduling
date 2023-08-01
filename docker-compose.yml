@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   firepuma-scheduling:
-    restart: unless-stopped
+    restart: on-failure
     build:
       context: .
       dockerfile: Firepuma.Scheduling.Worker/Dockerfile
